@@ -24,9 +24,13 @@ func _ready():
 	$Square.color = Color(randf(), randf(), randf())
 	#$Square.color = Color(0.094353, 0.081055, 0.324219)
 	start_search_point = self
+	$Square/StaticBody2D/CollisionShape2D.set_deferred("disabled", true)
 
 func set_color(c):
 	$Square.color = c
+
+func make_solid(solidity):
+	$Square/StaticBody2D/CollisionShape2D.set_deferred("disabled",solidity)
 
 func set_chunk_level(n):
 	chunk_level = n
@@ -69,7 +73,7 @@ func absolute_ish_position():
 	cached_abs_pos = pos
 	return pos
 
-func _on_Area2D_player_moved(pos):
+func _on_player_moved(pos):
 	# The *original* chunk receives this
 	# instead of the top-level chunk. Gotta convert
 	# coords before handing off.
@@ -182,111 +186,141 @@ func generate_near(pos, target_level = min_size):
 							remove_child(newchild)
 				
 				if has_meta("Biome"):
-					for ch in get_chunk_children(): ch.set_meta("Biome", get_meta("Biome"))
+					var grass_color = Color(.1,.7,.1)
+					var space_color = Color(0.094353, 0.081055, 0.324219)
+					var dirt_color = Color(0.300781, 0.238694, 0.091644)
+					# Copy parent by default
+					for ch in get_chunk_children():
+						ch.set_meta("Biome", get_meta("Biome"))
+						ch.set_color($Square.color)
 					if get_meta("Biome") == "planet":
-						nw_child.set_meta("Biome","nw_edge")
-						ne_child.set_meta("Biome", "ne_edge")
-						sw_child.set_meta("Biome", "sw_edge")
-						se_child.set_meta("Biome", "se_edge")
+						for ch in get_chunk_children():
+							ch.set_meta("planet radius", get_size().x/3.0)
+							ch.set_meta("planet center", get_size() /2.0)
+						nw_child.set_meta("Biome","crust")
+						ne_child.set_meta("Biome", "crust")
+						sw_child.set_meta("Biome", "crust")
+						se_child.set_meta("Biome", "crust")
 						n_child.set_color(Color(.1,.7,.1))
 						s_child.set_color(Color(.1,.7,.1))
 						e_child.set_color(Color(.1,.7,.1))
 						w_child.set_color(Color(.1,.7,.1))
-						c_child.set_color(Color(.1,.7,.1))
-						n_child.set_meta("Biome", "n_edge")
-						s_child.set_meta("Biome", "s_edge")
-						e_child.set_meta("Biome", "e_edge")
-						w_child.set_meta("Biome", "w_edge")
+						c_child.set_color(dirt_color)
+						c_child.set_meta("Biome", "dirt")
+						n_child.set_meta("Biome", "crust")
+						s_child.set_meta("Biome", "crust")
+						e_child.set_meta("Biome", "crust")
+						w_child.set_meta("Biome", "crust")
 					if get_meta("Biome") == "dirt":
 						for ch in get_chunk_children():
 							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						
-					if get_meta("Biome") == "n_edge":
+							ch.set_color(dirt_color)
+							ch.make_solid(true)
+						# We don't need to be solid anymore
+						make_solid(false)
+					if get_meta("Biome") == "crust":
+						#print("Breaking down some crust. Planet position is "+str(get_meta("planet center")))
 						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						nw_child.set_meta("Biome", "nw_edge")
-						n_child.set_meta("Biome", "n_edge")
-						ne_child.set_meta("Biome", "ne_edge")
-						nw_child.set_color(Color(.1,.7,.1))
-						n_child.set_color(Color(.1,.7,.1))
-						ne_child.set_color(Color(.1,.7,.1))
-					if get_meta("Biome") == "w_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						nw_child.set_meta("Biome", "nw_edge")
-						w_child.set_meta("Biome", "w_edge")
-						sw_child.set_meta("Biome", "sw_edge")
-						nw_child.set_color(Color(.1,.7,.1))
-						w_child.set_color(Color(.1,.7,.1))
-						sw_child.set_color(Color(.1,.7,.1))
-					if get_meta("Biome") == "e_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						ne_child.set_meta("Biome", "ne_edge")
-						e_child.set_meta("Biome", "e_edge")
-						se_child.set_meta("Biome", "se_edge")
-						ne_child.set_color(Color(.1,.7,.1))
-						e_child.set_color(Color(.1,.7,.1))
-						se_child.set_color(Color(.1,.7,.1))
-					if get_meta("Biome") == "s_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						sw_child.set_meta("Biome", "sw_edge")
-						s_child.set_meta("Biome", "s_edge")
-						se_child.set_meta("Biome", "se_edge")
-						sw_child.set_color(Color(.1,.7,.1))
-						s_child.set_color(Color(.1,.7,.1))
-						se_child.set_color(Color(.1,.7,.1))
-					
-					if get_meta("Biome") == "nw_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						nw_child.set_meta("Biome", "space")
-						n_child.set_meta("Biome", "space")
-						w_child.set_meta("Biome", "space")
-						for ch in [ne_child, c_child, sw_child]:
-							ch.set_meta("Biome", "nw_edge")
-							ch.set_color(Color(.1,.7,.1))
-						ne_child.set_meta("Biome", "n_edge")
-						sw_child.set_meta("Biome", "w_edge")
-					if get_meta("Biome") == "ne_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						ne_child.set_meta("Biome", "space")
-						n_child.set_meta("Biome", "space")
-						e_child.set_meta("Biome", "space")
-						for ch in [nw_child, c_child, se_child]:
-							ch.set_meta("Biome", "ne_edge")
-							ch.set_color(Color(.1,.7,.1))
-					if get_meta("Biome") == "sw_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						sw_child.set_meta("Biome", "space")
-						s_child.set_meta("Biome", "space")
-						w_child.set_meta("Biome", "space")
-						for ch in [nw_child, c_child, se_child]:
-							ch.set_meta("Biome", "sw_edge")
-							ch.set_color(Color(.1,.7,.1))
-					if get_meta("Biome") == "se_edge":
-						for ch in get_chunk_children():
-							ch.set_meta("Biome", "dirt")
-							ch.set_color(Color(0.300781, 0.238694, 0.091644))
-						se_child.set_meta("Biome", "space")
-						s_child.set_meta("Biome", "space")
-						e_child.set_meta("Biome", "space")
-						for ch in [ne_child, c_child, sw_child]:
-							ch.set_meta("Biome", "se_edge")
-							ch.set_color(Color(.1,.7,.1))
-						ne_child.set_meta("Biome", "e_edge")
-						sw_child.set_meta("Biome", "s_edge")
+							var ch_center = ch.position + (ch.get_size()/2.0) + position
+							if ch_center.distance_to(get_meta("planet center")) > get_meta("planet radius") + ch.get_size().x/1.5:
+								# Child is in space
+								ch.set_meta("Biome", "space")
+								ch.set_color(space_color)
+							elif ch_center.distance_to(get_meta("planet center")) < get_meta("planet radius") - ch.get_size().x/1.5:
+								# Child is planet interior
+								ch.set_meta("Biome", "dirt")
+								ch.set_color(dirt_color)
+							else:
+								# Child is crust, just like us! yay!
+								ch.set_meta("Biome", "crust")
+								ch.set_meta("planet center", get_meta("planet center") - position)
+								ch.set_meta("planet radius", get_meta("planet radius"))
+								ch.set_color(grass_color)
+#					if get_meta("Biome") == "n_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						nw_child.set_meta("Biome", "nw_edge")
+#						n_child.set_meta("Biome", "n_edge")
+#						ne_child.set_meta("Biome", "ne_edge")
+#						nw_child.set_color(Color(.1,.7,.1))
+#						n_child.set_color(Color(.1,.7,.1))
+#						ne_child.set_color(Color(.1,.7,.1))
+#					if get_meta("Biome") == "w_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						nw_child.set_meta("Biome", "nw_edge")
+#						w_child.set_meta("Biome", "w_edge")
+#						sw_child.set_meta("Biome", "sw_edge")
+#						nw_child.set_color(Color(.1,.7,.1))
+#						w_child.set_color(Color(.1,.7,.1))
+#						sw_child.set_color(Color(.1,.7,.1))
+#					if get_meta("Biome") == "e_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						ne_child.set_meta("Biome", "ne_edge")
+#						e_child.set_meta("Biome", "e_edge")
+#						se_child.set_meta("Biome", "se_edge")
+#						ne_child.set_color(Color(.1,.7,.1))
+#						e_child.set_color(Color(.1,.7,.1))
+#						se_child.set_color(Color(.1,.7,.1))
+#					if get_meta("Biome") == "s_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						sw_child.set_meta("Biome", "sw_edge")
+#						s_child.set_meta("Biome", "s_edge")
+#						se_child.set_meta("Biome", "se_edge")
+#						sw_child.set_color(Color(.1,.7,.1))
+#						s_child.set_color(Color(.1,.7,.1))
+#						se_child.set_color(Color(.1,.7,.1))
+#
+#					if get_meta("Biome") == "nw_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						nw_child.set_meta("Biome", "space")
+#						n_child.set_meta("Biome", "space")
+#						w_child.set_meta("Biome", "space")
+#						for ch in [ne_child, c_child, sw_child]:
+#							ch.set_meta("Biome", "nw_edge")
+#							ch.set_color(Color(.1,.7,.1))
+#						ne_child.set_meta("Biome", "n_edge")
+#						sw_child.set_meta("Biome", "w_edge")
+#					if get_meta("Biome") == "ne_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						ne_child.set_meta("Biome", "space")
+#						n_child.set_meta("Biome", "space")
+#						e_child.set_meta("Biome", "space")
+#						for ch in [nw_child, c_child, se_child]:
+#							ch.set_meta("Biome", "ne_edge")
+#							ch.set_color(Color(.1,.7,.1))
+#					if get_meta("Biome") == "sw_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						sw_child.set_meta("Biome", "space")
+#						s_child.set_meta("Biome", "space")
+#						w_child.set_meta("Biome", "space")
+#						for ch in [nw_child, c_child, se_child]:
+#							ch.set_meta("Biome", "sw_edge")
+#							ch.set_color(Color(.1,.7,.1))
+#					if get_meta("Biome") == "se_edge":
+#						for ch in get_chunk_children():
+#							ch.set_meta("Biome", "dirt")
+#							ch.set_color(Color(0.300781, 0.238694, 0.091644))
+#						se_child.set_meta("Biome", "space")
+#						s_child.set_meta("Biome", "space")
+#						e_child.set_meta("Biome", "space")
+#						for ch in [ne_child, c_child, sw_child]:
+#							ch.set_meta("Biome", "se_edge")
+#							ch.set_color(Color(.1,.7,.1))
+#						ne_child.set_meta("Biome", "e_edge")
+#						sw_child.set_meta("Biome", "s_edge")
 			# Now pass the task to the correct child
 			for child in get_chunk_children():
 				if child.contains(pos - position):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://move1.png" type="Texture" id=1]
 [ext_resource path="res://move2.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Camera2D.gd" type="Script" id=4]
 [ext_resource path="res://Node2D.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Node.gd" type="Script" id=6]
+[ext_resource path="res://Player.gd" type="Script" id=7]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -18,39 +19,51 @@ animations = [ {
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 24.5588
 
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 651.423, 495.796 )
+
 [node name="Node" type="Node"]
 script = ExtResource( 6 )
 
-[node name="Area2D" type="Area2D" parent="."]
-position = Vector2( 435, 265 )
-z_index = 2
-script = ExtResource( 3 )
+[node name="notchunk" type="Node" parent="."]
 
-[node name="notchunk" type="Node" parent="Area2D"]
-
-[node name="chunknetwork" parent="Area2D/notchunk" instance=ExtResource( 5 )]
+[node name="chunknetwork" parent="notchunk" instance=ExtResource( 5 )]
 position = Vector2( 416.616, 252.233 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Area2D"]
+[node name="Player" type="KinematicBody2D" parent="."]
+position = Vector2( 435, 265 )
+script = ExtResource( 7 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 position = Vector2( 1.25391, 1.19629 )
 scale = Vector2( 0.2, 0.2 )
 frames = SubResource( 1 )
 
-[node name="Camera2D" type="Camera2D" parent="Area2D/AnimatedSprite"]
+[node name="Camera2D" type="Camera2D" parent="Player/AnimatedSprite"]
 position = Vector2( 11.0283, 10.9871 )
 scale = Vector2( 5, 5 )
+rotating = true
 current = true
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 smoothing_enabled = true
-drag_margin_left = 0.8
-drag_margin_top = 0.7
-drag_margin_right = 0.8
-drag_margin_bottom = 0.8
+smoothing_speed = 8.0
+drag_margin_left = 0.4
+drag_margin_top = 0.4
+drag_margin_right = 0.4
+drag_margin_bottom = 0.4
 editor_draw_drag_margin = true
 script = ExtResource( 4 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 position = Vector2( -2.54907, 5.70837 )
 shape = SubResource( 2 )
-[connection signal="player_moved" from="Area2D" to="Area2D/notchunk/chunknetwork" method="_on_Area2D_player_moved"]
+
+[node name="Area2D" type="Area2D" parent="Player"]
+z_index = 2
+gravity_point = true
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+shape = SubResource( 3 )
+[connection signal="player_moved" from="Player" to="notchunk/chunknetwork" method="_on_player_moved"]
