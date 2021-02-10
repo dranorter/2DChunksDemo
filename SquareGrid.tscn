@@ -1,0 +1,31 @@
+[gd_scene format=2]
+
+[node name="Square" type="Polygon2D"]
+polygon = PoolVector2Array( 0, 0, 72, 0, 72, 72, 0, 72 )
+
+[node name="NW" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+
+[node name="N" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 24, 0, 48, 0, 48, 24, 24, 24 )
+
+[node name="NE" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 48, 0, 72, 0, 72, 24, 48, 24 )
+
+[node name="W" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 0, 24, 24, 24, 24, 48, 0, 48 )
+
+[node name="C" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 24, 24, 48, 24, 48, 48, 24, 48 )
+
+[node name="E" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 48, 24, 72, 24, 72, 48, 48, 48 )
+
+[node name="SW" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 0, 48, 24, 48, 24, 72, 0, 72 )
+
+[node name="S" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 24, 48, 48, 48, 48, 72, 24, 72 )
+
+[node name="SE" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 48, 48, 72, 48, 72, 72, 48, 72 )
