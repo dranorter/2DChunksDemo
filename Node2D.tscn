@@ -18,6 +18,7 @@ color = Color( 0.305882, 0.529412, 0.639216, 0 )
 polygon = PoolVector2Array( 0, 0, 1, 0, 1, 1, 0, 1 )
 
 [node name="Border" type="Line2D" parent="Square"]
+visible = false
 z_index = 1
 points = PoolVector2Array( 0, 0, 1, 0, 1, 1, 0, 1, 0, 0 )
 width = 0.05
