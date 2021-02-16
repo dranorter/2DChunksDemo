@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Object",
+"class": "TypeFormattingLogic",
+"language": "GDScript",
+"path": "res://addons/metadata_inspector/TypeFormattingLogic.gd"
+} ]
 _global_script_class_icons={
-
+"TypeFormattingLogic": ""
 }
 
 [application]
@@ -22,6 +27,10 @@ config/icon="res://icon.png"
 [display]
 
 window/size/height=800
+
+[editor_plugins]
+
+enabled=PoolStringArray( "metadata_inspector" )
 
 [input]
 
@@ -42,4 +51,5 @@ limits/message_queue/max_size_kb=2048
 
 [rendering]
 
+threads/thread_model=2
 environment/default_environment="res://default_env.tres"

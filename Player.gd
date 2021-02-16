@@ -24,8 +24,9 @@ func _process(delta):
 		emit_signal("player_moved", position)
 	else:
 		$AnimatedSprite.stop()
-	$Area2D.gravity_vec = get_parent().planet2.absolute_ish_position() + get_parent().planet2.get_size()/2 - position
-	$AnimatedSprite.set_rotation($Area2D.gravity_vec.angle()-TAU/4)#(-atan2($Area2D.gravity_vec.y, $Area2D.gravity_vec.x))
+	if get_parent().planet2 != null:
+		$Area2D.gravity_vec = get_parent().planet2.absolute_ish_position() + get_parent().planet2.get_size()/2 - position
+		$AnimatedSprite.set_rotation($Area2D.gravity_vec.angle()-TAU/4)#(-atan2($Area2D.gravity_vec.y, $Area2D.gravity_vec.x))
 
 func _physics_process(delta):
 	move_and_collide($Area2D.gravity_vec/10000)

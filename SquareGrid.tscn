@@ -1,31 +1,107 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="ConcavePolygonShape2D" id=1]
+segments = PoolVector2Array( 0, 0, 0, 72, 72, 72, 0, 72 )
 
 [node name="Square" type="Polygon2D"]
 polygon = PoolVector2Array( 0, 0, 72, 0, 72, 72, 0, 72 )
+__meta__ = {
+"children": 9,
+"main": "c",
+"size": 72
+}
 
-[node name="NW" type="Polygon2D" parent="."]
+[node name="NW" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
 polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "nw"
+}
 
-[node name="N" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 24, 0, 48, 0, 48, 24, 24, 24 )
+[node name="N" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 24, 0 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "n"
+}
 
-[node name="NE" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 48, 0, 72, 0, 72, 24, 48, 24 )
+[node name="NE" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 48, 0 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "ne"
+}
 
-[node name="W" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 0, 24, 24, 24, 24, 48, 0, 48 )
+[node name="W" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 0, 24 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "w"
+}
 
-[node name="C" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 24, 24, 48, 24, 48, 48, 24, 48 )
+[node name="C" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 24, 24 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "c"
+}
 
-[node name="E" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 48, 24, 72, 24, 72, 48, 48, 48 )
+[node name="E" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 48, 24 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "e"
+}
 
-[node name="SW" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 0, 48, 24, 48, 24, 72, 0, 72 )
+[node name="SW" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 0, 48 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "sw"
+}
 
-[node name="S" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 24, 48, 48, 48, 48, 72, 24, 72 )
+[node name="S" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 24, 48 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "s"
+}
 
-[node name="SE" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 48, 48, 72, 48, 72, 72, 48, 72 )
+[node name="SE" type="Polygon2D" parent="." groups=[
+"template",
+]]
+visible = false
+position = Vector2( 48, 48 )
+polygon = PoolVector2Array( 0, 0, 24, 0, 24, 24, 0, 24 )
+__meta__ = {
+"id": "se"
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 1 )
+disabled = true
